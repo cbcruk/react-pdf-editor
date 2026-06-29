@@ -1,0 +1,23 @@
+{
+  "name": "@pkg/preview",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vp dev"
+  },
+  "dependencies": {
+    "@pkg/components": "workspace:*",
+    "@pkg/migrator": "workspace:*",
+    "@pkg/render": "workspace:*",
+    "@react-pdf/renderer": "^4.5.1",
+    "react": "^19.2.7",
+    "react-dom": "^19.2.7"
+  },
+  "devDependencies": {
+    "@react-pdf/types": "^2.11.1",
+    "@types/react": "^19.2.17",
+    "@types/react-dom": "^19.2.3",
+    "@vitejs/plugin-react": "^6.0.3"
+  }
+}

@@ -1,0 +1,69 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`snapshot: document with heading, list and table 1`] = `
+"import { Document, Page, Text, View } from "@react-pdf/renderer";
+
+export function Report(): React.ReactElement {
+  return (
+    <Document>
+      <Page size="A4" style={{ padding: 24 }}>
+        <View style={{ padding: 16 }}>
+          <Text style={{ fontSize: 24, fontWeight: 700, marginBottom: 8 }}>
+            보고서
+          </Text>
+          <View>
+            <Text>
+              1. 
+              설계
+            </Text>
+            <Text>
+              2. 
+              구현
+            </Text>
+          </View>
+          <View>
+            <View style={{ flexDirection: "row" }}>
+              <Text style={{ flex: 1, paddingRight: 8, fontWeight: 700 }}>
+                항목
+              </Text>
+              <Text style={{ flex: 1, paddingRight: 8, fontWeight: 700 }}>
+                값
+              </Text>
+            </View>
+            <View style={{ flexDirection: "row" }}>
+              <Text style={{ flex: 1, paddingRight: 8 }}>
+                A
+              </Text>
+              <Text style={{ flex: 1, paddingRight: 8 }}>
+                1
+              </Text>
+            </View>
+          </View>
+        </View>
+      </Page>
+    </Document>
+  );
+}
+
+export default Report;
+"
+`;
+
+exports[`snapshot: img with border shorthand 1`] = `
+"import { Document, Image, Page, Text, View } from "@react-pdf/renderer";
+
+export function Migrated(): React.ReactElement {
+  return (
+    <Document>
+      <Page size="A4" style={{ padding: 24 }}>
+        <View style={{ borderWidth: 1, borderColor: "#cccccc" }}>
+          <Image src="logo.png" style={{ width: 48 }} />
+        </View>
+      </Page>
+    </Document>
+  );
+}
+
+export default Migrated;
+"
+`;

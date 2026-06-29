@@ -1,0 +1,32 @@
+{
+  "name": "@pkg/migrator",
+  "version": "0.0.0",
+  "private": true,
+  "bin": {
+    "migrate": "./src/cli.ts"
+  },
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./src/index.ts",
+      "default": "./src/index.ts"
+    },
+    "./browser": {
+      "types": "./src/browser.ts",
+      "default": "./src/browser.ts"
+    }
+  },
+  "scripts": {
+    "build": "vp pack"
+  },
+  "dependencies": {
+    "node-html-parser": "^7.0.1",
+    "playwright-core": "^1.50.0"
+  },
+  "devDependencies": {
+    "@react-pdf/renderer": "^4.5.1",
+    "@react-pdf/types": "^2.11.1",
+    "@types/react": "^19.2.17",
+    "react": "^19.2.7"
+  }
+}
