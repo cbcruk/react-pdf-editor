@@ -2,7 +2,27 @@
 
 **react-email for PDFs** — `@react-pdf/renderer` 위에 깐 dev-first 툴킷. JSX가 source of truth, GUI는 핫리로드 미리보기 보조.
 
-자세한 배경과 설계 결정은 [DESIGN.md](./DESIGN.md) 참고.
+react-pdf는 좌표가 아니라 **흐름(flexbox) 레이아웃**이라, 빌더도 자유 캔버스가 아닌 **블록/트리** 방식입니다. 초기 설계 배경은 [DESIGN.md](./DESIGN.md) 참고(문서 이후 템플릿 렌더러 → 블록 빌더로 방향 전환).
+
+## 빌더
+
+`vp dev packages/preview`로 dev 서버를 띄우면 **Builder**가 기본 화면입니다.
+
+```
+[블록 추가]      │  [라이브 PDF]     │  [속성 · 내보내기]
+ + Section       │                   │  선택 블록 편집
+ + Heading       │   pdf.js 캔버스   │  ─────────────
+ + Field         │   (깜빡임 없음)   │  [pdf/에 저장]
+ + Text          │                   │  [TSX 보기]
+ + Table         │                   │
+[문서 트리]      │                   │
+ ▾ Section       │                   │
+   Field  ↑↓ ⌦   │                   │
+```
+
+- **짓기 → 미리보기 → 내보내기** 한 바퀴: 블록 추가 → 트리에서 선택/정렬/중첩/삭제 → 속성 편집(즉시 미리보기) → `pdf/에 저장`
+- 저장하면 실제 react-pdf TSX로 기록되고 **사이드바 Documents에 자동 등장**
+- 미리보기는 `pdf().toBlob()` → **pdf.js 캔버스** 렌더(디바운스 + 더블버퍼)라 편집 중 깜빡임/누적 없음
 
 ## 패키지 (pnpm + Vite+ 모노레포)
 
