@@ -1,10 +1,10 @@
-import { View } from "@react-pdf/renderer";
-import { mergeStyles } from "../style.utils.ts";
-import { useTokens } from "../theme.tsx";
-import type { DividerProps } from "./divider.types.ts";
+import { View } from '@react-pdf/renderer'
+import { mergeStyles } from '../style.utils.ts'
+import { useTokens } from '../theme.tsx'
+import type { DividerProps } from './divider.types.ts'
 
 export function Divider({ style }: DividerProps): React.ReactElement {
-  const tokens = useTokens();
+  const tokens = useTokens()
 
   return (
     <View
@@ -17,5 +17,5 @@ export function Divider({ style }: DividerProps): React.ReactElement {
         style,
       )}
     />
-  );
+  )
 }

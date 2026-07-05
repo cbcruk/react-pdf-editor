@@ -1,5 +1,5 @@
-import { Document, Page, StyleSheet, Text, View } from "@react-pdf/renderer";
-import { Field, Heading, Section, Signature, tokens } from "@pkg/components";
+import { Document, Page, StyleSheet, Text, View } from '@react-pdf/renderer'
+import { Field, Heading, Section, Signature, tokens } from '@pkg/components'
 
 const styles = StyleSheet.create({
   page: {
@@ -16,7 +16,7 @@ const styles = StyleSheet.create({
     marginBottom: tokens.space.lg,
   },
   weightRow: {
-    flexDirection: "row",
+    flexDirection: 'row',
     gap: tokens.space.md,
     marginTop: tokens.space.sm,
   },
@@ -33,23 +33,23 @@ const styles = StyleSheet.create({
     marginBottom: tokens.space.xs,
   },
   signatureRow: {
-    flexDirection: "row",
-    justifyContent: "space-between",
+    flexDirection: 'row',
+    justifyContent: 'space-between',
     marginTop: tokens.space.xl,
   },
-});
+})
 
 export interface ConsentProps {
-  patientName?: string;
-  procedure?: string;
-  date?: string;
+  patientName?: string
+  procedure?: string
+  date?: string
 }
 
 export const previewProps: ConsentProps = {
-  patientName: "홍길동",
-  procedure: "위내시경 검사",
-  date: "2026년 6월 28일",
-};
+  patientName: '홍길동',
+  procedure: '위내시경 검사',
+  date: '2026년 6월 28일',
+}
 
 export function Consent({
   patientName = previewProps.patientName,
@@ -103,7 +103,7 @@ export function Consent({
         </View>
       </Page>
     </Document>
-  );
+  )
 }
 
-export default Consent;
+export default Consent

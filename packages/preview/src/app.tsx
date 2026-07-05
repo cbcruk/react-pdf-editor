@@ -1,37 +1,38 @@
-import { useState } from "react";
-import { PDFViewer } from "@react-pdf/renderer";
-import { documents } from "./documents.ts";
-import { Sidebar } from "./components/sidebar/sidebar.tsx";
-import { Toolbar } from "./components/toolbar/toolbar.tsx";
-import type { Surface } from "./components/toolbar/toolbar.types.ts";
-import { PropsPanel } from "./components/props-panel/props-panel.tsx";
-import { MigrateView } from "./components/migrate-view/migrate-view.tsx";
+import { useState } from 'react'
+import { PDFViewer } from '@react-pdf/renderer'
+import { documents } from './documents.ts'
+import { Sidebar } from './components/sidebar/sidebar.tsx'
+import { Toolbar } from './components/toolbar/toolbar.tsx'
+import type { Surface } from './components/toolbar/toolbar.types.ts'
+import { PropsPanel } from './components/props-panel/props-panel.tsx'
+import { MigrateView } from './components/migrate-view/migrate-view.tsx'
+import { BuilderView } from './builder/builder-view.tsx'
 
-type View = "document" | "migrate";
+type View = 'document' | 'migrate' | 'builder'
 
 export function App(): React.ReactElement {
-  const [view, setView] = useState<View>("document");
-  const [activeSlug, setActiveSlug] = useState(documents[0]?.slug ?? "");
-  const [surface, setSurface] = useState<Surface>("dark");
-  const [overrides, setOverrides] = useState<Record<string, Record<string, unknown>>>({});
+  const [view, setView] = useState<View>('builder')
+  const [activeSlug, setActiveSlug] = useState(documents[0]?.slug ?? '')
+  const [surface, setSurface] = useState<Surface>('dark')
+  const [overrides, setOverrides] = useState<Record<string, Record<string, unknown>>>({})
 
-  const active = documents.find((doc) => doc.slug === activeSlug);
-  const activeProps = active ? (overrides[active.slug] ?? active.previewProps) : {};
+  const active = documents.find((doc) => doc.slug === activeSlug)
+  const activeProps = active ? (overrides[active.slug] ?? active.previewProps) : {}
 
   const handleSelect = (slug: string): void => {
-    setActiveSlug(slug);
-    setView("document");
-  };
+    setActiveSlug(slug)
+    setView('document')
+  }
 
   const handlePropsChange = (next: Record<string, unknown>): void => {
     if (!active) {
-      return;
+      return
     }
 
-    setOverrides((prev) => ({ ...prev, [active.slug]: next }));
-  };
+    setOverrides((prev) => ({ ...prev, [active.slug]: next }))
+  }
 
-  const documentElement = active ? <active.Component {...activeProps} /> : null;
+  const documentElement = active ? <active.Component {...activeProps} /> : null
 
   return (
     <div style={styles.shell}>
@@ -39,17 +40,21 @@ export function App(): React.ReactElement {
         documents={documents}
         activeSlug={activeSlug}
         onSelect={handleSelect}
-        migrateActive={view === "migrate"}
-        onMigrate={() => setView("migrate")}
+        migrateActive={view === 'migrate'}
+        onMigrate={() => setView('migrate')}
+        builderActive={view === 'builder'}
+        onBuilder={() => setView('builder')}
       />
-      {view === "migrate" ? (
+      {view === 'builder' ? (
+        <BuilderView />
+      ) : view === 'migrate' ? (
         <MigrateView />
       ) : (
         <>
           <main
             style={{
               ...styles.preview,
-              background: surface === "dark" ? "#525659" : "#e5e7eb",
+              background: surface === 'dark' ? '#525659' : '#e5e7eb',
             }}
           >
             {active && documentElement ? (
@@ -59,7 +64,7 @@ export function App(): React.ReactElement {
                   document={documentElement}
                   fileName={`${active.slug}.pdf`}
                   surface={surface}
-                  onToggleSurface={() => setSurface((prev) => (prev === "dark" ? "light" : "dark"))}
+                  onToggleSurface={() => setSurface((prev) => (prev === 'dark' ? 'light' : 'dark'))}
                 />
                 <PDFViewer
                   key={active.slug}
@@ -81,27 +86,27 @@ export function App(): React.ReactElement {
         </>
       )}
     </div>
-  );
+  )
 }
 
 const styles: Record<string, React.CSSProperties> = {
   shell: {
-    display: "flex",
-    height: "100vh",
-    fontFamily: "system-ui, sans-serif",
+    display: 'flex',
+    height: '100vh',
+    fontFamily: 'system-ui, sans-serif',
   },
   preview: {
     flex: 1,
-    display: "flex",
-    flexDirection: "column",
-    background: "#525659",
+    display: 'flex',
+    flexDirection: 'column',
+    background: '#525659',
   },
   empty: {
-    display: "flex",
-    height: "100%",
-    alignItems: "center",
-    justifyContent: "center",
-    color: "#d1d5db",
+    display: 'flex',
+    height: '100%',
+    alignItems: 'center',
+    justifyContent: 'center',
+    color: '#d1d5db',
     fontSize: 14,
   },
-};
+}

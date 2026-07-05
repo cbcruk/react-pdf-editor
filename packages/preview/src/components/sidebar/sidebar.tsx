@@ -1,4 +1,4 @@
-import type { SidebarProps } from "./sidebar.types.ts";
+import type { SidebarProps } from './sidebar.types.ts'
 
 export function Sidebar({
   documents,
@@ -6,14 +6,31 @@ export function Sidebar({
   onSelect,
   migrateActive,
   onMigrate,
+  builderActive,
+  onBuilder,
 }: SidebarProps): React.ReactElement {
+  const documentsActive = !migrateActive && !builderActive
+
   return (
     <aside style={styles.sidebar}>
       <div style={styles.brand}>react-pdf-editor</div>
+      <div style={styles.sectionLabel}>Build</div>
+      <nav style={styles.nav}>
+        <button
+          type="button"
+          onClick={onBuilder}
+          style={{
+            ...styles.navItem,
+            ...(builderActive ? styles.navItemActive : null),
+          }}
+        >
+          Builder
+        </button>
+      </nav>
       <div style={styles.sectionLabel}>Documents</div>
       <nav style={styles.nav}>
         {documents.map((doc) => {
-          const isActive = !migrateActive && doc.slug === activeSlug;
+          const isActive = documentsActive && doc.slug === activeSlug
 
           return (
             <button
@@ -27,7 +44,7 @@ export function Sidebar({
             >
               {doc.slug}
             </button>
-          );
+          )
         })}
       </nav>
       <div style={styles.sectionLabel}>Tools</div>
@@ -44,17 +61,17 @@ export function Sidebar({
         </button>
       </nav>
     </aside>
-  );
+  )
 }
 
 const styles: Record<string, React.CSSProperties> = {
   sidebar: {
     width: 220,
     flexShrink: 0,
-    borderRight: "1px solid #e5e7eb",
+    borderRight: '1px solid #e5e7eb',
     padding: 16,
-    boxSizing: "border-box",
-    background: "#ffffff",
+    boxSizing: 'border-box',
+    background: '#ffffff',
   },
   brand: {
     fontWeight: 700,
@@ -64,30 +81,30 @@ const styles: Record<string, React.CSSProperties> = {
   sectionLabel: {
     fontSize: 10,
     fontWeight: 700,
-    textTransform: "uppercase",
+    textTransform: 'uppercase',
     letterSpacing: 0.5,
-    color: "#9ca3af",
-    margin: "12px 0 6px",
+    color: '#9ca3af',
+    margin: '12px 0 6px',
   },
   nav: {
-    display: "flex",
-    flexDirection: "column",
+    display: 'flex',
+    flexDirection: 'column',
     gap: 2,
   },
   navItem: {
-    appearance: "none",
-    border: "none",
-    background: "none",
-    textAlign: "left",
-    padding: "8px 10px",
+    appearance: 'none',
+    border: 'none',
+    background: 'none',
+    textAlign: 'left',
+    padding: '8px 10px',
     borderRadius: 6,
     fontSize: 13,
-    color: "#374151",
-    cursor: "pointer",
+    color: '#374151',
+    cursor: 'pointer',
   },
   navItemActive: {
-    background: "#f3f4f6",
-    color: "#111827",
+    background: '#f3f4f6',
+    color: '#111827',
     fontWeight: 600,
   },
-};
+}

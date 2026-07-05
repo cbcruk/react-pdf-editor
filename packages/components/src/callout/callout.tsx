@@ -1,20 +1,20 @@
-import { Text, View } from "@react-pdf/renderer";
-import { useTokens } from "../theme.tsx";
-import type { CalloutProps, CalloutVariant } from "./callout.types.ts";
+import { Text, View } from '@react-pdf/renderer'
+import { useTokens } from '../theme.tsx'
+import type { CalloutProps, CalloutVariant } from './callout.types.ts'
 
 const variantColor: Record<CalloutVariant, { accent: string; background: string }> = {
-  info: { accent: "#2563eb", background: "#eff6ff" },
-  warning: { accent: "#d97706", background: "#fffbeb" },
-};
+  info: { accent: '#2563eb', background: '#eff6ff' },
+  warning: { accent: '#d97706', background: '#fffbeb' },
+}
 
-export function Callout({ children, title, variant = "info" }: CalloutProps): React.ReactElement {
-  const tokens = useTokens();
-  const { accent, background } = variantColor[variant];
+export function Callout({ children, title, variant = 'info' }: CalloutProps): React.ReactElement {
+  const tokens = useTokens()
+  const { accent, background } = variantColor[variant]
 
   return (
     <View
       style={{
-        flexDirection: "row",
+        flexDirection: 'row',
         backgroundColor: background,
         borderLeftWidth: 3,
         borderLeftColor: accent,
@@ -41,5 +41,5 @@ export function Callout({ children, title, variant = "info" }: CalloutProps): Re
         <Text>{children}</Text>
       </View>
     </View>
-  );
+  )
 }

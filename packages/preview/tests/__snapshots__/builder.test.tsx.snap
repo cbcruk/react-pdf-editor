@@ -1,0 +1,22 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`emits kit TSX with the right imports and default export 1`] = `
+"import { Document, Page } from "@react-pdf/renderer";
+import { Field, Heading, Section } from "@pkg/components";
+
+export function Consent(): React.ReactElement {
+  return (
+    <Document>
+      <Page size="A4" style={{ padding: 48, fontFamily: "Pretendard", fontSize: 11 }}>
+        <Heading level={1}>동의서</Heading>
+        <Section title="환자 정보">
+          <Field label="성명" value="홍길동" />
+        </Section>
+      </Page>
+    </Document>
+  );
+}
+
+export default Consent;
+"
+`;

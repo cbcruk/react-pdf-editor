@@ -1,5 +1,5 @@
-import type { Style } from "@react-pdf/types";
+import type { Style } from '@react-pdf/types'
 
 export interface DividerProps {
-  style?: Style | Style[];
+  style?: Style | Style[]
 }

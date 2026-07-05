@@ -1,9 +1,9 @@
-import { Text, View } from "@react-pdf/renderer";
-import { useTokens } from "../theme.tsx";
-import type { SignatureProps } from "./signature.types.ts";
+import { Text, View } from '@react-pdf/renderer'
+import { useTokens } from '../theme.tsx'
+import type { SignatureProps } from './signature.types.ts'
 
-export function Signature({ label, width = "45%" }: SignatureProps): React.ReactElement {
-  const tokens = useTokens();
+export function Signature({ label, width = '45%' }: SignatureProps): React.ReactElement {
+  const tokens = useTokens()
 
   return (
     <View style={{ width }}>
@@ -21,5 +21,5 @@ export function Signature({ label, width = "45%" }: SignatureProps): React.React
         {label}
       </Text>
     </View>
-  );
+  )
 }

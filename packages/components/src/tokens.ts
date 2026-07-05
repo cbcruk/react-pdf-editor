@@ -1,35 +1,35 @@
 export interface Tokens {
-  fontFamily: string;
+  fontFamily: string
   color: {
-    text: string;
-    muted: string;
-    border: string;
-    borderStrong: string;
-    accent: string;
-  };
-  space: { xs: number; sm: number; md: number; lg: number; xl: number };
+    text: string
+    muted: string
+    border: string
+    borderStrong: string
+    accent: string
+  }
+  space: { xs: number; sm: number; md: number; lg: number; xl: number }
   fontSize: {
-    sm: number;
-    base: number;
-    md: number;
-    lg: number;
-    xl: number;
-    xxl: number;
-  };
-  fontWeight: { regular: number; bold: number };
-  lineHeight: { tight: number; normal: number };
-  radius: { sm: number; md: number };
-  page: { paddingVertical: number; paddingHorizontal: number };
+    sm: number
+    base: number
+    md: number
+    lg: number
+    xl: number
+    xxl: number
+  }
+  fontWeight: { regular: number; bold: number }
+  lineHeight: { tight: number; normal: number }
+  radius: { sm: number; md: number }
+  page: { paddingVertical: number; paddingHorizontal: number }
 }
 
 export const defaultTokens: Tokens = {
-  fontFamily: "Pretendard",
+  fontFamily: 'Pretendard',
   color: {
-    text: "#1a1a1a",
-    muted: "#6b7280",
-    border: "#e5e7eb",
-    borderStrong: "#1a1a1a",
-    accent: "#2563eb",
+    text: '#1a1a1a',
+    muted: '#6b7280',
+    border: '#e5e7eb',
+    borderStrong: '#1a1a1a',
+    accent: '#2563eb',
   },
   space: {
     xs: 4,
@@ -62,13 +62,13 @@ export const defaultTokens: Tokens = {
     paddingVertical: 56,
     paddingHorizontal: 48,
   },
-};
+}
 
-export const tokens = defaultTokens;
+export const tokens = defaultTokens
 
 export type TokensOverride = {
-  [K in keyof Tokens]?: Tokens[K] extends object ? Partial<Tokens[K]> : Tokens[K];
-};
+  [K in keyof Tokens]?: Tokens[K] extends object ? Partial<Tokens[K]> : Tokens[K]
+}
 
 export function createTokens(overrides: TokensOverride = {}): Tokens {
   return {
@@ -80,15 +80,15 @@ export function createTokens(overrides: TokensOverride = {}): Tokens {
     lineHeight: { ...defaultTokens.lineHeight, ...overrides.lineHeight },
     radius: { ...defaultTokens.radius, ...overrides.radius },
     page: { ...defaultTokens.page, ...overrides.page },
-  };
+  }
 }
 
 export const darkTheme: Tokens = createTokens({
   color: {
-    text: "#f3f4f6",
-    muted: "#9ca3af",
-    border: "#374151",
-    borderStrong: "#e5e7eb",
-    accent: "#60a5fa",
+    text: '#f3f4f6',
+    muted: '#9ca3af',
+    border: '#374151',
+    borderStrong: '#e5e7eb',
+    accent: '#60a5fa',
   },
-});
+})

@@ -1,4 +1,4 @@
-import { Document, Page, StyleSheet, View } from "@react-pdf/renderer";
+import { Document, Page, StyleSheet, View } from '@react-pdf/renderer'
 import {
   Callout,
   Divider,
@@ -11,7 +11,7 @@ import {
   Spacer,
   Table,
   tokens,
-} from "@pkg/components";
+} from '@pkg/components'
 
 const styles = StyleSheet.create({
   page: {
@@ -23,23 +23,23 @@ const styles = StyleSheet.create({
     paddingHorizontal: tokens.page.paddingHorizontal,
   },
   row: {
-    flexDirection: "row",
+    flexDirection: 'row',
     gap: tokens.space.xl,
   },
   signatureRow: {
-    flexDirection: "row",
-    justifyContent: "space-between",
+    flexDirection: 'row',
+    justifyContent: 'space-between',
     marginTop: tokens.space.lg,
   },
-});
+})
 
 export interface KitShowcaseProps {
-  title?: string;
+  title?: string
 }
 
 export const previewProps: KitShowcaseProps = {
-  title: "컴포넌트 키트 쇼케이스",
-};
+  title: '컴포넌트 키트 쇼케이스',
+}
 
 export function KitShowcase({ title = previewProps.title }: KitShowcaseProps): React.ReactElement {
   return (
@@ -58,7 +58,7 @@ export function KitShowcase({ title = previewProps.title }: KitShowcaseProps): R
         <Divider />
 
         <Section title="List">
-          <List items={["디자인 토큰", "컴포넌트 키트", "마이그레이터"]} ordered />
+          <List items={['디자인 토큰', '컴포넌트 키트', '마이그레이터']} ordered />
         </Section>
 
         <Spacer size="md" />
@@ -66,12 +66,12 @@ export function KitShowcase({ title = previewProps.title }: KitShowcaseProps): R
         <Section title="Table">
           <Table
             columns={[
-              { key: "name", header: "항목" },
-              { key: "value", header: "값", width: 120, align: "right" },
+              { key: 'name', header: '항목' },
+              { key: 'value', header: '값', width: 120, align: 'right' },
             ]}
             data={[
-              { name: "컴포넌트", value: "10개" },
-              { name: "테스트", value: "통과" },
+              { name: '컴포넌트', value: '10개' },
+              { name: '테스트', value: '통과' },
             ]}
           />
         </Section>
@@ -91,7 +91,7 @@ export function KitShowcase({ title = previewProps.title }: KitShowcaseProps): R
         </View>
       </Page>
     </Document>
-  );
+  )
 }
 
-export default KitShowcase;
+export default KitShowcase

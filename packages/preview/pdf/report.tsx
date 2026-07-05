@@ -1,5 +1,5 @@
-import { Document, Page, StyleSheet } from "@react-pdf/renderer";
-import { Callout, Heading, List, Section, tokens } from "@pkg/components";
+import { Document, Page, StyleSheet } from '@react-pdf/renderer'
+import { Callout, Heading, List, Section, tokens } from '@pkg/components'
 
 const styles = StyleSheet.create({
   page: {
@@ -10,23 +10,23 @@ const styles = StyleSheet.create({
     paddingVertical: tokens.page.paddingVertical,
     paddingHorizontal: tokens.page.paddingHorizontal,
   },
-});
+})
 
 export interface ReportProps {
-  title?: string;
-  highlights?: string[];
-  note?: string;
+  title?: string
+  highlights?: string[]
+  note?: string
 }
 
 export const previewProps: ReportProps = {
-  title: "2026년 2분기 운영 보고서",
+  title: '2026년 2분기 운영 보고서',
   highlights: [
-    "월간 활성 사용자 38% 증가",
-    "PDF 렌더링 평균 응답 시간 220ms 달성",
-    "신규 컴포넌트 키트(List, Callout) 도입",
+    '월간 활성 사용자 38% 증가',
+    'PDF 렌더링 평균 응답 시간 220ms 달성',
+    '신규 컴포넌트 키트(List, Callout) 도입',
   ],
-  note: "다음 분기에는 마이그레이터 Playwright 경로를 정식 출시할 예정입니다.",
-};
+  note: '다음 분기에는 마이그레이터 Playwright 경로를 정식 출시할 예정입니다.',
+}
 
 export function Report({
   title = previewProps.title,
@@ -52,7 +52,7 @@ export function Report({
         </Section>
       </Page>
     </Document>
-  );
+  )
 }
 
-export default Report;
+export default Report

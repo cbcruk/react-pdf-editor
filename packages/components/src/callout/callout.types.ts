@@ -1,9 +1,9 @@
-import type { ReactNode } from "react";
+import type { ReactNode } from 'react'
 
-export type CalloutVariant = "info" | "warning";
+export type CalloutVariant = 'info' | 'warning'
 
 export interface CalloutProps {
-  children: ReactNode;
-  title?: string;
-  variant?: CalloutVariant;
+  children: ReactNode
+  title?: string
+  variant?: CalloutVariant
 }

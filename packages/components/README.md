@@ -22,7 +22,7 @@
 `tokens`(= `defaultTokens`)는 `fontFamily`, `color`, `space`, `fontSize`, `fontWeight`, `lineHeight`, `radius`, `page` 카테고리를 가집니다. 타입은 `Tokens`.
 
 ```tsx
-import { tokens } from "@pkg/components";
+import { tokens } from '@pkg/components'
 
 const styles = StyleSheet.create({
   page: {
@@ -30,7 +30,7 @@ const styles = StyleSheet.create({
     fontSize: tokens.fontSize.base,
     color: tokens.color.text,
   },
-});
+})
 ```
 
 ## 테마
@@ -42,16 +42,16 @@ const styles = StyleSheet.create({
 `createTokens(overrides)`는 카테고리별로 기본 토큰에 얕은 병합을 적용합니다.
 
 ```tsx
-import { ThemeProvider, createTokens } from "@pkg/components";
+import { ThemeProvider, createTokens } from '@pkg/components'
 
 const brand = createTokens({
-  color: { accent: "#7c3aed" },
+  color: { accent: '#7c3aed' },
   fontSize: { xl: 28 },
-});
+})
 
-<ThemeProvider tokens={brand}>
+;<ThemeProvider tokens={brand}>
   <Heading level={1}>제목</Heading>
-</ThemeProvider>;
+</ThemeProvider>
 ```
 
 ### 다크 프리셋
@@ -59,13 +59,12 @@ const brand = createTokens({
 `darkTheme`는 밝은 텍스트/테두리로 미리 구성된 `Tokens`입니다. 어두운 `Page` 배경과 함께 쓰세요.
 
 ```tsx
-import { ThemeProvider, darkTheme } from "@pkg/components";
-
-<Page size="A4" style={{ backgroundColor: "#111827", padding: 24 }}>
+import { ThemeProvider, darkTheme } from '@pkg/components'
+;<Page size="A4" style={{ backgroundColor: '#111827', padding: 24 }}>
   <ThemeProvider tokens={darkTheme}>
     <Heading level={1}>다크 문서</Heading>
   </ThemeProvider>
-</Page>;
+</Page>
 ```
 
 > 폰트는 호스트(프리뷰 앱 / `@pkg/render`)가 `Font.register`로 등록합니다. 키트는 `tokens.fontFamily`("Pretendard")만 참조합니다.

@@ -1,4 +1,4 @@
 export interface SignatureProps {
-  label: string;
-  width?: number | string;
+  label: string
+  width?: number | string
 }

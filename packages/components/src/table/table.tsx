@@ -1,17 +1,17 @@
-import { Text, View } from "@react-pdf/renderer";
-import type { Style } from "@react-pdf/types";
-import { useTokens } from "../theme.tsx";
-import type { TableColumn, TableProps } from "./table.types.ts";
+import { Text, View } from '@react-pdf/renderer'
+import type { Style } from '@react-pdf/types'
+import { useTokens } from '../theme.tsx'
+import type { TableColumn, TableProps } from './table.types.ts'
 
 export function Table({ columns, data }: TableProps): React.ReactElement {
-  const tokens = useTokens();
+  const tokens = useTokens()
 
   const cellStyle = (column: TableColumn): Style => ({
     width: column.width,
     flex: column.width === undefined ? 1 : undefined,
-    textAlign: column.align ?? "left",
+    textAlign: column.align ?? 'left',
     paddingRight: tokens.space.sm,
-  });
+  })
 
   return (
     <View
@@ -23,7 +23,7 @@ export function Table({ columns, data }: TableProps): React.ReactElement {
     >
       <View
         style={{
-          flexDirection: "row",
+          flexDirection: 'row',
           borderBottomWidth: 2,
           borderColor: tokens.color.borderStrong,
           paddingVertical: tokens.space.sm,
@@ -41,7 +41,7 @@ export function Table({ columns, data }: TableProps): React.ReactElement {
         <View
           key={index}
           style={{
-            flexDirection: "row",
+            flexDirection: 'row',
             borderBottomWidth: 1,
             borderColor: tokens.color.border,
             paddingVertical: tokens.space.sm,
@@ -49,11 +49,11 @@ export function Table({ columns, data }: TableProps): React.ReactElement {
         >
           {columns.map((column) => (
             <Text key={column.key} style={cellStyle(column)}>
-              {row[column.key] ?? ""}
+              {row[column.key] ?? ''}
             </Text>
           ))}
         </View>
       ))}
     </View>
-  );
+  )
 }
