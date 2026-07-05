@@ -11,6 +11,7 @@
     "@pkg/migrator": "workspace:*",
     "@pkg/render": "workspace:*",
     "@react-pdf/renderer": "^4.5.1",
+    "pdfjs-dist": "^6.1.200",
     "react": "^19.2.7",
     "react-dom": "^19.2.7"
   },

@@ -1,9 +1,9 @@
-import { useState } from 'react'
-import { PDFViewer } from '@react-pdf/renderer'
+import { useMemo, useState } from 'react'
 import { documents } from './documents.ts'
 import { Sidebar } from './components/sidebar/sidebar.tsx'
 import { Toolbar } from './components/toolbar/toolbar.tsx'
 import type { Surface } from './components/toolbar/toolbar.types.ts'
+import { PdfPreview } from './components/pdf-preview/pdf-preview.tsx'
 import { PropsPanel } from './components/props-panel/props-panel.tsx'
 import { MigrateView } from './components/migrate-view/migrate-view.tsx'
 import { BuilderView } from './builder/builder-view.tsx'
@@ -32,7 +32,10 @@ export function App(): React.ReactElement {
     setOverrides((prev) => ({ ...prev, [active.slug]: next }))
   }
 
-  const documentElement = active ? <active.Component {...activeProps} /> : null
+  const documentElement = useMemo(
+    () => (active ? <active.Component {...activeProps} /> : null),
+    [active, activeProps],
+  )
 
   return (
     <div style={styles.shell}>
@@ -51,12 +54,7 @@ export function App(): React.ReactElement {
         <MigrateView />
       ) : (
         <>
-          <main
-            style={{
-              ...styles.preview,
-              background: surface === 'dark' ? '#525659' : '#e5e7eb',
-            }}
-          >
+          <main style={styles.preview}>
             {active && documentElement ? (
               <>
                 <Toolbar
@@ -66,15 +64,10 @@ export function App(): React.ReactElement {
                   surface={surface}
                   onToggleSurface={() => setSurface((prev) => (prev === 'dark' ? 'light' : 'dark'))}
                 />
-                <PDFViewer
-                  key={active.slug}
-                  className="viewer"
-                  width="100%"
-                  height="100%"
-                  showToolbar
-                >
-                  {documentElement}
-                </PDFViewer>
+                <PdfPreview
+                  document={documentElement}
+                  background={surface === 'dark' ? '#525659' : '#e5e7eb'}
+                />
               </>
             ) : (
               <div style={styles.empty}>No documents found in pdf/</div>

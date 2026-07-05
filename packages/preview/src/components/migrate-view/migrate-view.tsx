@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react'
-import { PDFViewer } from '@react-pdf/renderer'
+import { PdfPreview } from '../pdf-preview/pdf-preview.tsx'
 import { htmlToReactPdf, transform } from '@pkg/migrator/browser'
 import type { IrNode } from '@pkg/migrator/browser'
 import { MigratedDocument } from './ir-to-element.tsx'
@@ -66,6 +66,7 @@ export function MigrateView(): React.ReactElement {
   const isCapture = sourceMode === 'capture'
   const ir = isCapture ? (captured?.nodes ?? []) : inlineIr
   const tsx = isCapture ? (captured?.tsx ?? '') : inlineTsx
+  const migratedDoc = useMemo(() => <MigratedDocument nodes={ir} />, [ir])
 
   const runCapture = async (): Promise<void> => {
     setLoading(true)
@@ -186,11 +187,7 @@ export function MigrateView(): React.ReactElement {
         </div>
         {saveMessage ? <div style={styles.saveMessage}>{saveMessage}</div> : null}
       </div>
-      <div style={styles.preview}>
-        <PDFViewer className="viewer" width="100%" height="100%" showToolbar>
-          <MigratedDocument nodes={ir} />
-        </PDFViewer>
-      </div>
+      <PdfPreview document={migratedDoc} />
     </div>
   )
 }

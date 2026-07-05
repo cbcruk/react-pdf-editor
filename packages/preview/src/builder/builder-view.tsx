@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react'
-import { PDFViewer } from '@react-pdf/renderer'
+import { PdfPreview } from '../components/pdf-preview/pdf-preview.tsx'
 import { BLOCK_TYPES, createBlock, nextId } from './block-defaults.ts'
 import { emitBlocks } from './block-emit.ts'
 import { BlockProps } from './block-props.tsx'
@@ -57,6 +57,7 @@ export function BuilderView(): React.ReactElement {
   const selected = selectedId ? findBlock(blocks, selectedId) : null
   const componentName = useMemo(() => toComponentName(docName), [docName])
   const tsx = useMemo(() => emitBlocks(blocks, componentName), [blocks, componentName])
+  const preview = useMemo(() => <BuilderDocument blocks={blocks} />, [blocks])
 
   const handleAdd = (type: (typeof BLOCK_TYPES)[number]): void => {
     const block = createBlock(type)
@@ -125,11 +126,7 @@ export function BuilderView(): React.ReactElement {
         </div>
       </div>
 
-      <div style={styles.preview}>
-        <PDFViewer className="viewer" width="100%" height="100%" showToolbar>
-          <BuilderDocument blocks={blocks} />
-        </PDFViewer>
-      </div>
+      <PdfPreview document={preview} />
 
       <div style={styles.right}>
         <div style={styles.label}>속성{selected ? ` · ${selected.type}` : ''}</div>
