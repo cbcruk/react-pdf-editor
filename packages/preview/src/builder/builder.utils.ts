@@ -1,4 +1,4 @@
-import type { Block } from './builder.types.ts'
+import type { Block, BlockStyle } from './builder.types.ts'
 
 export function findBlock(blocks: Block[], id: string): Block | null {
   for (const block of blocks) {
@@ -26,6 +26,27 @@ export function updateBlockProps(
     }
 
     return { ...block, children: updateBlockProps(block.children, id, patch) }
+  })
+}
+
+export function updateBlockStyle(blocks: Block[], id: string, patch: BlockStyle): Block[] {
+  return blocks.map((block) => {
+    if (block.id === id) {
+      const style = { ...block.style, ...patch }
+      // 값이 비워진(undefined) 키는 style 에서 제거해 깔끔한 방출을 유지한다.
+      for (const key of Object.keys(patch) as Array<keyof BlockStyle>) {
+        if (patch[key] === undefined) {
+          delete style[key]
+        }
+      }
+      const next = { ...block, style } as Block
+      if (Object.keys(style).length === 0) {
+        delete next.style
+      }
+      return next
+    }
+
+    return { ...block, children: updateBlockStyle(block.children, id, patch) }
   })
 }
 

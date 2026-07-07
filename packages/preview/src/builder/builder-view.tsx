@@ -5,7 +5,14 @@ import { emitBlocks } from './block-emit.ts'
 import { BlockProps } from './block-props.tsx'
 import { BuilderDocument } from './block-render.tsx'
 import type { Block } from './builder.types.ts'
-import { addBlock, findBlock, moveBlock, removeBlock, updateBlockProps } from './builder.utils.ts'
+import {
+  addBlock,
+  findBlock,
+  moveBlock,
+  removeBlock,
+  updateBlockProps,
+  updateBlockStyle,
+} from './builder.utils.ts'
 
 function initialDocument(): Block[] {
   return [
@@ -135,6 +142,9 @@ export function BuilderView(): React.ReactElement {
             key={selected.id}
             block={selected}
             onChange={(patch) => setBlocks((prev) => updateBlockProps(prev, selected.id, patch))}
+            onStyleChange={(patch) =>
+              setBlocks((prev) => updateBlockStyle(prev, selected.id, patch))
+            }
           />
         ) : (
           <div style={styles.empty}>블록을 선택하세요</div>

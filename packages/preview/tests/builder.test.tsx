@@ -3,7 +3,13 @@ import { expect, test } from 'vite-plus/test'
 import { emitBlocks } from '../src/builder/block-emit.ts'
 import { BuilderDocument } from '../src/builder/block-render.tsx'
 import type { Block } from '../src/builder/builder.types.ts'
-import { addBlock, moveBlock, removeBlock, updateBlockProps } from '../src/builder/builder.utils.ts'
+import {
+  addBlock,
+  moveBlock,
+  removeBlock,
+  updateBlockProps,
+  updateBlockStyle,
+} from '../src/builder/builder.utils.ts'
 
 registerFonts()
 
@@ -44,6 +50,30 @@ test('renders the block tree to a valid PDF', async () => {
 
   expect(raw.startsWith('%PDF-')).toBe(true)
   expect(raw).toContain('Pretendard')
+})
+
+test('a section style wraps children in a View row and imports View', () => {
+  const styled = updateBlockStyle(doc, 's1', { flexDirection: 'row', gap: 8 })
+  const tsx = emitBlocks(styled, 'Consent')
+
+  expect(tsx).toContain('import { Document, Page, View } from "@react-pdf/renderer"')
+  expect(tsx).toContain('<View style={{"flexDirection":"row","gap":8}}>')
+})
+
+test('updateBlockStyle merges patches and drops emptied keys', () => {
+  const rowed = updateBlockStyle(doc, 's1', { flexDirection: 'row', gap: 8 })
+  const section = rowed[1]
+  expect(section?.style).toEqual({ flexDirection: 'row', gap: 8 })
+
+  const cleared = updateBlockStyle(rowed, 's1', { flexDirection: undefined, gap: undefined })
+  expect(cleared[1]?.style).toBeUndefined()
+})
+
+test('renders a styled block tree to a valid PDF', async () => {
+  const styled = updateBlockStyle(doc, 's1', { flexDirection: 'row', gap: 8 })
+  const buffer = await renderPdf(<BuilderDocument blocks={styled} />)
+
+  expect(buffer.toString('latin1').startsWith('%PDF-')).toBe(true)
 })
 
 test('tree operations add, nest, move, update and remove blocks', () => {

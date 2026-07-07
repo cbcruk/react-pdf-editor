@@ -58,11 +58,11 @@ borderWidth, borderColor, borderRadius, backgroundColor, opacity, textAlign …
 
 ## 2. "빌더에 yoga" 의 세 가지 해석과 판정
 
-| 옵션 | 내용 | 판정 |
-| --- | --- | --- |
-| **A. 속성 노출** | props 패널에 flex/spacing/size 컨트롤을 추가, `Block.style`로 저장 → `View style`로 주입 | ✅ **채택.** 저비용·고효용. 리플로우 문서의 실사용 요구를 직접 해결 |
-| **B. 브라우저 yoga 구동** | `yoga-layout` WASM을 preview에 직접 로드해 드래그 가이드/치수 오버레이/스냅을 자체 계산 | ❌ **기각.** 진실의 원천 이원화. pdf.js가 이미 실제 결과를 렌더. 절대좌표 캔버스도 아님(우리는 흐름 모델) |
-| **C. 스키마에 레이아웃 반영** | `Block`에 `style` 필드 추가, `block-emit`/`block-render`가 함께 처리 | ✅ **채택(A의 전제).** 단 "얇게" — 자유 CSS가 아니라 큐레이트된 어휘만 |
+| 옵션                          | 내용                                                                                     | 판정                                                                                                      |
+| ----------------------------- | ---------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------- |
+| **A. 속성 노출**              | props 패널에 flex/spacing/size 컨트롤을 추가, `Block.style`로 저장 → `View style`로 주입 | ✅ **채택.** 저비용·고효용. 리플로우 문서의 실사용 요구를 직접 해결                                       |
+| **B. 브라우저 yoga 구동**     | `yoga-layout` WASM을 preview에 직접 로드해 드래그 가이드/치수 오버레이/스냅을 자체 계산  | ❌ **기각.** 진실의 원천 이원화. pdf.js가 이미 실제 결과를 렌더. 절대좌표 캔버스도 아님(우리는 흐름 모델) |
+| **C. 스키마에 레이아웃 반영** | `Block`에 `style` 필드 추가, `block-emit`/`block-render`가 함께 처리                     | ✅ **채택(A의 전제).** 단 "얇게" — 자유 CSS가 아니라 큐레이트된 어휘만                                    |
 
 ### 왜 B를 버리는가 (핵심 논거)
 
@@ -89,20 +89,36 @@ import type { Style } from '@react-pdf/types'
 // css.utils.ts SUPPORTED 와 의도적으로 동일 어휘.
 export type BlockStyle = Pick<
   Style,
-  | 'flexDirection' | 'justifyContent' | 'alignItems' | 'gap'
-  | 'flexGrow' | 'flexShrink' | 'flexBasis'
-  | 'width' | 'height'
-  | 'padding' | 'paddingTop' | 'paddingRight' | 'paddingBottom' | 'paddingLeft'
-  | 'marginTop' | 'marginBottom'
-  | 'backgroundColor' | 'borderWidth' | 'borderColor' | 'borderRadius'
+  | 'flexDirection'
+  | 'justifyContent'
+  | 'alignItems'
+  | 'gap'
+  | 'flexGrow'
+  | 'flexShrink'
+  | 'flexBasis'
+  | 'width'
+  | 'height'
+  | 'padding'
+  | 'paddingTop'
+  | 'paddingRight'
+  | 'paddingBottom'
+  | 'paddingLeft'
+  | 'marginTop'
+  | 'marginBottom'
+  | 'backgroundColor'
+  | 'borderWidth'
+  | 'borderColor'
+  | 'borderRadius'
   | 'textAlign'
 >
 
-export type Block = { id: string; children: Block[]; style?: BlockStyle } & (
-  | { type: 'Section'; props: { title: string } }
-  // …기존 그대로
-)
+// 모든 블록에 옵셔널 style 을 붙인다. 콘텐츠 props 와는 분리.
+export type Block = { id: string; children: Block[]; style?: BlockStyle } &
+  // 기존 판별 유니언(Section | Heading | Field | Text | Table)은 그대로 유지
+  Record<never, never>
 ```
+
+> P1 구현 반영: 위 스키마는 실제로 `packages/preview/src/builder/builder.types.ts` 에 적용되어 있다. 아래 3.2~3.4 는 초안 스케치이고, 최종 구현은 "Section 은 자식 컨테이너를, 리프는 자기 박스를 `<View>` 로 래핑" 방식으로 통일했다(§7 참고).
 
 `style`를 콘텐츠 `props`와 **분리**하는 게 중요하다: props는 컴포넌트 의미(무엇), style은 배치(어떻게). 이 분리가 있어야 `block-emit`이 `<Section title=… style={{…}}>`처럼 자연스럽게 낸다.
 
@@ -113,7 +129,13 @@ export type Block = { id: string; children: Block[]; style?: BlockStyle } & (
 ```tsx
 // block-render.tsx — style 있는 블록만 View로 감싸는 헬퍼
 function withLayout(style: BlockStyle | undefined, node: ReactNode, key: string): ReactNode {
-  return style ? <View key={key} style={style}>{node}</View> : node
+  return style ? (
+    <View key={key} style={style}>
+      {node}
+    </View>
+  ) : (
+    node
+  )
 }
 ```
 
@@ -163,17 +185,32 @@ function styleAttr(style: BlockStyle | undefined): string {
 
 ## 5. 단계별 적용 제안
 
-| 단계 | 범위 | 산출 |
-| --- | --- | --- |
-| **P0 (이 문서)** | 검토·결정 | 옵션 A+C 채택, B 기각 |
-| **P1** | 스키마+렌더+방출 배선 | `Block.style` 추가, `block-render`/`block-emit` 통과. UI는 방향(column/row)+gap만 | 
-| **P2** | props 패널 레이아웃 섹션 확장 | 정렬·spacing·size·표면 컨트롤. `css.utils` 값 파서 공유 | 
-| **P3** | 회귀 방어 | `block-emit`/`builder` 스냅샷 테스트에 style 케이스 추가(`tests/builder.test.tsx`, `__snapshots__`) |
+| 단계             | 범위                          | 산출                                                                                                |
+| ---------------- | ----------------------------- | --------------------------------------------------------------------------------------------------- |
+| **P0 (이 문서)** | 검토·결정                     | 옵션 A+C 채택, B 기각                                                                               |
+| **P1**           | 스키마+렌더+방출 배선         | `Block.style` 추가, `block-render`/`block-emit` 통과. UI는 방향(column/row)+gap만                   |
+| **P2**           | props 패널 레이아웃 섹션 확장 | 정렬·spacing·size·표면 컨트롤. `css.utils` 값 파서 공유                                             |
+| **P3**           | 회귀 방어                     | `block-emit`/`builder` 스냅샷 테스트에 style 케이스 추가(`tests/builder.test.tsx`, `__snapshots__`) |
 
 P1만 해도 "두 Field 가로 배치"라는 가장 흔한 요구가 풀린다. 비용 대비 효과가 가장 큰 최소 절단면이다.
 
 ---
 
-## 6. 요약 한 줄
+## 6. P1 구현 결과 (이 커밋)
+
+문서의 P1을 실제로 반영했다. 배선 요약:
+
+- **스키마** (`builder.types.ts`): `BlockStyle`(§3.1 어휘) + `Block.style?` 추가.
+- **렌더** (`block-render.tsx`): `style` 있는 리프는 `<View style>` 로 자기 박스를 감싸고, **Section 은 자식만** `<View style>` 로 감싸 제목을 흐름에서 분리했다. 그래서 Section 을 `방향: 가로` 로 두면 제목은 위, 필드들은 한 줄로 놓인다.
+- **방출** (`block-emit.ts`): 동일 규칙으로 `<View style={…}>` 를 TSX 로 직렬화. 하나라도 style 이 있으면 react-pdf import 에 `View` 를 추가한다.
+- **상태** (`builder.utils.ts`): `updateBlockStyle(blocks, id, patch)` — 패치 병합 + `undefined` 키 제거 + 빈 style 은 노드에서 삭제(깔끔한 방출 유지).
+- **UI** (`block-props.tsx`): Section 속성 아래 "레이아웃" 섹션 — 방향(세로/가로 세그먼트) + 간격(gap, pt). yoga 기본이 column 이라 세로가 기본 선택.
+- **테스트** (`tests/builder.test.tsx`): row+gap 방출 시 `View` import·래핑 확인, `updateBlockStyle` 병합/삭제, styled 트리의 PDF 렌더 유효성.
+
+리프 블록(`Field`/`Text` 등)에도 `style` 배선은 통과하지만, P1 UI 는 컨테이너인 **Section 에만** 방향/gap 을 노출한다(리프에 방향/gap 은 무의미하므로). spacing·size·표면 컨트롤과 리프 대상 확장은 **P2** 로 남긴다.
+
+---
+
+## 7. 요약 한 줄
 
 **yoga는 이미 엔진으로 돌고 있으니 새로 들일 것은 없다. 할 일은 그 엔진의 flex 속성을 — migrator가 이미 확정한 어휘 그대로 — `Block.style`과 props 패널에 얇게 노출해, 빌더가 표방하는 "리플로우 문서"를 실제로 편집 가능하게 만드는 것이다. 브라우저에서 yoga를 별도로 돌리는 길(옵션 B)은 pdf.js 미리보기와 중복이라 가지 않는다.**
