@@ -1,28 +1,52 @@
 import type { ReactNode } from 'react'
-import { Document, Page, Text } from '@react-pdf/renderer'
+import { Document, Page, Text, View } from '@react-pdf/renderer'
 import { Field, Heading, Section, Table } from '@pkg/components'
 import type { Block } from './builder.types.ts'
 
+// 리프 블록의 style 은 자기 박스에 적용(단일 자식 래핑).
+function withBox(block: Block, node: ReactNode): ReactNode {
+  if (!block.style) {
+    return node
+  }
+
+  return (
+    <View key={block.id} style={block.style}>
+      {node}
+    </View>
+  )
+}
+
 function renderBlock(block: Block): ReactNode {
   switch (block.type) {
-    case 'Section':
+    case 'Section': {
+      const children = block.children.map(renderBlock)
+
+      // Section 의 style 은 제목이 아니라 자식 흐름(row/gap 등)을 제어한다.
       return (
         <Section key={block.id} title={block.props.title}>
-          {block.children.map(renderBlock)}
+          {block.style ? <View style={block.style}>{children}</View> : children}
         </Section>
       )
+    }
     case 'Heading':
-      return (
+      return withBox(
+        block,
         <Heading key={block.id} level={block.props.level}>
           {block.props.text}
-        </Heading>
+        </Heading>,
       )
     case 'Field':
-      return <Field key={block.id} label={block.props.label} value={block.props.value} />
+      return withBox(
+        block,
+        <Field key={block.id} label={block.props.label} value={block.props.value} />,
+      )
     case 'Text':
-      return <Text key={block.id}>{block.props.text}</Text>
+      return withBox(block, <Text key={block.id}>{block.props.text}</Text>)
     case 'Table':
-      return <Table key={block.id} columns={block.props.columns} data={block.props.data} />
+      return withBox(
+        block,
+        <Table key={block.id} columns={block.props.columns} data={block.props.data} />,
+      )
   }
 }
 

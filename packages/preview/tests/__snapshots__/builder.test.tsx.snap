@@ -1,5 +1,30 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
+exports[`emits a fully styled tree (snapshot) 1`] = `
+"import { Document, Page, View } from "@react-pdf/renderer";
+import { Field, Heading, Section } from "@pkg/components";
+
+export function Consent(): React.ReactElement {
+  return (
+    <Document>
+      <Page size="A4" style={{ padding: 48, fontFamily: "Pretendard", fontSize: 11 }}>
+        <Heading level={1}>동의서</Heading>
+        <Section title="환자 정보">
+          <View style={{"flexDirection":"row","gap":8,"alignItems":"center","justifyContent":"space-between"}}>
+            <View style={{"width":"50%","paddingTop":4,"paddingBottom":4,"marginRight":6,"backgroundColor":"#f3f4f6","borderRadius":4}}>
+              <Field label="성명" value="홍길동" />
+            </View>
+          </View>
+        </Section>
+      </Page>
+    </Document>
+  );
+}
+
+export default Consent;
+"
+`;
+
 exports[`emits kit TSX with the right imports and default export 1`] = `
 "import { Document, Page } from "@react-pdf/renderer";
 import { Field, Heading, Section } from "@pkg/components";
