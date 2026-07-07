@@ -227,6 +227,22 @@ P1만 해도 "두 Field 가로 배치"라는 가장 흔한 요구가 풀린다. 
 
 ---
 
-## 8. 요약 한 줄
+## 8. P3 구현 결과 (이 커밋)
+
+세밀한 여백 컨트롤과 방출 회귀 방어를 추가했다.
+
+- **스키마 보강** (`builder.types.ts`): `BlockStyle` 에 `margin`·`marginRight`·`marginLeft` 를 더해 4방향 여백 어휘를 완성(padding TRBL 은 P1 부터 이미 포함).
+- **4방향 여백 에디터** (`block-props.tsx`): 단일 padding/marginTop·Bottom 입력을 `EdgesField`(위·오/아·왼 4칸 그리드) 두 개로 대체 — 안쪽(padding) / 바깥(margin) 여백을 축별로 편집. 빈 칸은 style 에서 제거된다.
+- **스냅샷 회귀 테스트** (`tests/builder.test.tsx`, `__snapshots__/builder.test.tsx.snap`): row+정렬 컨테이너 + 폭 50%·TRBL 여백·표면을 가진 리프를 함께 방출한 TSX 를 스냅샷으로 고정. 중첩 `View` 래핑과 style 직렬화가 회귀하면 즉시 잡힌다.
+
+**yoga 축 안에서의 레이아웃 편집은 여기서 실용 범위가 대체로 닫힌다.** 남는 것은 yoga 밖의 축이다:
+
+- **페이지 나눔** (`wrap`/`break`/`minPresenceAhead`) — react-pdf 확장(스타일이 아니라 엘리먼트 prop). 별도 모델·UI 축으로 다뤄야 함.
+- **`position: 'absolute'` + top/right/bottom/left** — 흐름/페이지 나눔과의 상호작용 때문에 신중히. migrator 캡처 경로에만 있고 빌더 UI 에는 아직 미노출.
+- 이 둘은 "리플로우 문서" 기본 사용성에는 필수가 아니라 후속 과제로 남긴다.
+
+---
+
+## 9. 요약 한 줄
 
 **yoga는 이미 엔진으로 돌고 있으니 새로 들일 것은 없다. 할 일은 그 엔진의 flex 속성을 — migrator가 이미 확정한 어휘 그대로 — `Block.style`과 props 패널에 얇게 노출해, 빌더가 표방하는 "리플로우 문서"를 실제로 편집 가능하게 만드는 것이다. 브라우저에서 yoga를 별도로 돌리는 길(옵션 B)은 pdf.js 미리보기와 중복이라 가지 않는다.**

@@ -69,6 +69,25 @@ test('updateBlockStyle merges patches and drops emptied keys', () => {
   expect(cleared[1]?.style).toBeUndefined()
 })
 
+test('emits a fully styled tree (snapshot)', () => {
+  let styled = updateBlockStyle(doc, 's1', {
+    flexDirection: 'row',
+    gap: 8,
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  })
+  styled = updateBlockStyle(styled, 'f1', {
+    width: '50%',
+    paddingTop: 4,
+    paddingBottom: 4,
+    marginRight: 6,
+    backgroundColor: '#f3f4f6',
+    borderRadius: 4,
+  })
+
+  expect(emitBlocks(styled, 'Consent')).toMatchSnapshot()
+})
+
 test('a leaf block style wraps the element in a View box', () => {
   const styled = updateBlockStyle(doc, 'f1', { padding: 6, backgroundColor: '#f3f4f6' })
   const section = styled[1]

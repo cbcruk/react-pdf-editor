@@ -195,20 +195,17 @@ function LayoutControls({
         />
       </Row>
 
-      <NumberField
-        label="바깥 위 여백 (marginTop)"
-        value={style?.marginTop}
-        onChange={(marginTop) => onChange({ marginTop })}
-      />
-      <NumberField
-        label="바깥 아래 여백 (marginBottom)"
-        value={style?.marginBottom}
-        onChange={(marginBottom) => onChange({ marginBottom })}
-      />
-      <NumberField
+      <EdgesField
         label="안쪽 여백 (padding)"
-        value={style?.padding}
-        onChange={(padding) => onChange({ padding })}
+        sides={PADDING_SIDES}
+        style={style}
+        onChange={onChange}
+      />
+      <EdgesField
+        label="바깥 여백 (margin)"
+        sides={MARGIN_SIDES}
+        style={style}
+        onChange={onChange}
       />
 
       <ColorField
@@ -232,6 +229,76 @@ function LayoutControls({
         onChange={(borderRadius) => onChange({ borderRadius })}
       />
     </>
+  )
+}
+
+// 4방향 여백 에디터의 축 순서(위·오른쪽·아래·왼쪽)와 축별 라벨.
+type Edges = {
+  top: keyof BlockStyle
+  right: keyof BlockStyle
+  bottom: keyof BlockStyle
+  left: keyof BlockStyle
+}
+
+const PADDING_SIDES: Edges = {
+  top: 'paddingTop',
+  right: 'paddingRight',
+  bottom: 'paddingBottom',
+  left: 'paddingLeft',
+}
+
+const MARGIN_SIDES: Edges = {
+  top: 'marginTop',
+  right: 'marginRight',
+  bottom: 'marginBottom',
+  left: 'marginLeft',
+}
+
+const EDGE_ORDER = ['top', 'right', 'bottom', 'left'] as const
+const EDGE_LABEL: Record<(typeof EDGE_ORDER)[number], string> = {
+  top: '위',
+  right: '오',
+  bottom: '아',
+  left: '왼',
+}
+
+function EdgesField({
+  label,
+  sides,
+  style,
+  onChange,
+}: {
+  label: string
+  sides: Edges
+  style: BlockStyle | undefined
+  onChange: (patch: BlockStyle) => void
+}): React.ReactElement {
+  return (
+    <div style={styles.label}>
+      {label}
+      <div style={styles.edges}>
+        {EDGE_ORDER.map((pos) => {
+          const key = sides[pos]
+          const current = style?.[key]
+
+          return (
+            <label key={pos} style={styles.edge}>
+              <span style={styles.edgeCap}>{EDGE_LABEL[pos]}</span>
+              <input
+                type="number"
+                value={typeof current === 'number' ? current : ''}
+                placeholder="0"
+                onChange={(event) => {
+                  const raw = event.target.value
+                  onChange({ [key]: raw === '' ? undefined : Number(raw) } as BlockStyle)
+                }}
+                style={styles.edgeInput}
+              />
+            </label>
+          )
+        })}
+      </div>
+    </div>
   )
 }
 
@@ -475,6 +542,34 @@ const styles: Record<string, React.CSSProperties> = {
     display: 'flex',
     gap: 6,
     alignItems: 'center',
+  },
+  edges: {
+    display: 'grid',
+    gridTemplateColumns: 'repeat(4, 1fr)',
+    gap: 4,
+  },
+  edge: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    gap: 2,
+    fontSize: 10,
+    color: '#9ca3af',
+  },
+  edgeCap: {
+    fontSize: 10,
+  },
+  edgeInput: {
+    width: '100%',
+    boxSizing: 'border-box',
+    border: '1px solid #e5e7eb',
+    borderRadius: 6,
+    padding: '5px 4px',
+    fontSize: 12,
+    color: '#111827',
+    outline: 'none',
+    textAlign: 'center',
+    fontFamily: 'inherit',
   },
   colorSwatch: {
     width: 32,
