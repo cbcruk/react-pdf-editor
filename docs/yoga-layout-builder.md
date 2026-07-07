@@ -211,6 +211,22 @@ P1만 해도 "두 Field 가로 배치"라는 가장 흔한 요구가 풀린다. 
 
 ---
 
-## 7. 요약 한 줄
+## 7. P2 구현 결과 (이 커밋)
+
+레이아웃 컨트롤을 정렬·크기·여백·표면까지 확장하고, 모든 블록 타입으로 노출 대상을 넓혔다.
+
+- **값 파서 공유** (`@pkg/migrator`): `css.utils.ts` 의 길이 파싱을 `parseLength(raw)` 로 추출해 export(`@pkg/migrator/browser`). 인라인 스타일 파서(`parseValue`)와 빌더 입력이 같은 규칙(`px`/unitless → number, `50%` 등 → 문자열, 빈 값 → undefined)을 공유한다.
+- **컨트롤 확장** (`block-props.tsx`):
+  - **컨테이너(Section) 전용**: 방향(세로/가로), 교차축 정렬(alignItems), 주축 정렬(justifyContent, row 일 때만), 간격(gap).
+  - **모든 블록 공통**: 폭(width, pt 또는 %), 남는 공간 채우기(flexGrow 토글), 바깥 위/아래 여백(marginTop/Bottom), 안쪽 여백(padding), 배경색·테두리 두께·테두리 색·모서리 반경. 색은 네이티브 컬러 스와치 + hex 입력.
+- **구조 정리**: `BlockProps` 를 `ContentFields`(콘텐츠) + `LayoutControls`(스타일)로 분리. `Segment`/`Toggle`/`NumberField`/`LengthField`/`ColorField` 프리미티브로 반복 제거.
+- **리프 스타일**: 리프 블록에 width/padding/배경/테두리 등을 주면 P1 래핑 규칙대로 `<View style>` 박스로 감싸 렌더·방출된다(예: 폭 50% + 배경 카드형 필드).
+- **테스트**: 리프 블록 style 이 `<View>` 박스로 감싸이고 `View` import 가 붙는지 추가 검증.
+
+다음(P3) 후보: `block-emit` 스냅샷에 style 케이스 추가, position/absolute·페이지 나눔 축(별도 모델), 개별 padding TRBL·margin 좌우 등 세밀 컨트롤.
+
+---
+
+## 8. 요약 한 줄
 
 **yoga는 이미 엔진으로 돌고 있으니 새로 들일 것은 없다. 할 일은 그 엔진의 flex 속성을 — migrator가 이미 확정한 어휘 그대로 — `Block.style`과 props 패널에 얇게 노출해, 빌더가 표방하는 "리플로우 문서"를 실제로 편집 가능하게 만드는 것이다. 브라우저에서 yoga를 별도로 돌리는 길(옵션 B)은 pdf.js 미리보기와 중복이라 가지 않는다.**

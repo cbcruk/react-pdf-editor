@@ -69,6 +69,18 @@ test('updateBlockStyle merges patches and drops emptied keys', () => {
   expect(cleared[1]?.style).toBeUndefined()
 })
 
+test('a leaf block style wraps the element in a View box', () => {
+  const styled = updateBlockStyle(doc, 'f1', { padding: 6, backgroundColor: '#f3f4f6' })
+  const section = styled[1]
+  const field = section?.type === 'Section' ? section.children[0] : undefined
+  expect(field?.style).toEqual({ padding: 6, backgroundColor: '#f3f4f6' })
+
+  const tsx = emitBlocks(styled, 'Consent')
+  expect(tsx).toContain('import { Document, Page, View } from "@react-pdf/renderer"')
+  expect(tsx).toContain('<View style={{"padding":6,"backgroundColor":"#f3f4f6"}}>')
+  expect(tsx).toContain('<Field label="성명" value="홍길동" />')
+})
+
 test('renders a styled block tree to a valid PDF', async () => {
   const styled = updateBlockStyle(doc, 's1', { flexDirection: 'row', gap: 8 })
   const buffer = await renderPdf(<BuilderDocument blocks={styled} />)

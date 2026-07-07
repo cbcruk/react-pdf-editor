@@ -107,21 +107,40 @@ function parseBorderShorthand(value: string): {
   return { width, color }
 }
 
-function parseValue(prop: string, raw: string): string | number | null {
+/**
+ * 길이 값을 react-pdf 스타일 값으로 파싱한다.
+ * `12px`/`12` → number, `50%` 등 그 외 → 문자열 그대로, 빈 값 → undefined.
+ * 빌더의 레이아웃 입력(폭·여백 등)과 인라인 스타일 파서가 공유한다.
+ */
+export function parseLength(raw: string): number | string | undefined {
   const value = raw.trim()
 
-  if (LENGTH_PROPS.has(prop)) {
-    const pixels = /^(-?\d*\.?\d+)px$/.exec(value)
-    if (pixels?.[1]) {
-      return Number(pixels[1])
-    }
+  if (value === '') {
+    return undefined
+  }
 
-    const unitless = /^(-?\d*\.?\d+)$/.exec(value)
-    if (unitless?.[1]) {
-      return Number(unitless[1])
+  const pixels = /^(-?\d*\.?\d+)px$/.exec(value)
+  if (pixels?.[1]) {
+    return Number(pixels[1])
+  }
+
+  const unitless = /^(-?\d*\.?\d+)$/.exec(value)
+  if (unitless?.[1]) {
+    return Number(unitless[1])
+  }
+
+  return value
+}
+
+function parseValue(prop: string, raw: string): string | number | null {
+  if (LENGTH_PROPS.has(prop)) {
+    const length = parseLength(raw)
+    if (typeof length === 'number') {
+      return length
     }
   }
 
+  const value = raw.trim()
   return value === '' ? null : value
 }
 
