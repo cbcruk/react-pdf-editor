@@ -9,6 +9,14 @@ interface BlockPropsProps {
   onStyleChange: (patch: BlockStyle) => void
 }
 
+/**
+ * 선택된 블록의 속성 편집 패널. 콘텐츠 필드(`ContentFields`)와 레이아웃
+ * 컨트롤(`LayoutControls`)을 함께 렌더한다.
+ *
+ * @param props.block - 편집 대상 블록
+ * @param props.onChange - 콘텐츠 `props` 부분 갱신 콜백
+ * @param props.onStyleChange - 레이아웃 `style` 부분 갱신 콜백
+ */
 export function BlockProps({
   block,
   onChange,

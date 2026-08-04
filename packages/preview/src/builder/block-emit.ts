@@ -59,6 +59,17 @@ function emitBlock(block: Block, indent: string): string {
   return `${indent}<View style={${JSON.stringify(block.style)}}>\n${element}\n${indent}</View>`
 }
 
+/**
+ * 블록 트리를 실제 react-pdf TSX 모듈 문자열로 방출한다.
+ *
+ * 사용된 블록 타입만 골라 `@pkg/components` / `@react-pdf/renderer` import 를 만들고,
+ * style 이 붙은 블록이 하나라도 있으면 `View` import 를 추가한다. Section 의 style 은
+ * 자식을 감싸는 `<View>` 로, 리프의 style 은 자기 자신을 감싸는 `<View>` 로 직렬화된다.
+ *
+ * @param blocks - 최상위 블록 목록
+ * @param componentName - 내보낼 함수 컴포넌트 이름(named + default export)
+ * @returns 저장하거나 `pdf/` 에 기록할 수 있는 완성된 TSX 소스 문자열
+ */
 export function emitBlocks(blocks: Block[], componentName: string): string {
   const seen = new Set<BlockType>()
   collectTypes(blocks, seen)
