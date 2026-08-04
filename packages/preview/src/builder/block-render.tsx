@@ -50,6 +50,14 @@ function renderBlock(block: Block): ReactNode {
   }
 }
 
+/**
+ * 블록 트리를 라이브 미리보기용 react-pdf 문서 엘리먼트로 렌더한다.
+ * `emitBlocks` 가 만드는 TSX 와 같은 구조(A4 · Pretendard · 동일 style 래핑 규칙)를
+ * 그려, 미리보기와 방출 결과가 일치하도록 한다.
+ *
+ * @param props.blocks - 렌더할 최상위 블록 목록
+ * @returns `<PdfPreview>` 에 넘길 `<Document>` 엘리먼트
+ */
 export function BuilderDocument({ blocks }: { blocks: Block[] }): React.ReactElement {
   return (
     <Document>

@@ -54,6 +54,12 @@ function toComponentName(name: string): string {
   )
 }
 
+/**
+ * 블록 빌더 화면. 좌측 팔레트/문서 트리, 가운데 라이브 PDF 미리보기,
+ * 우측 속성·레이아웃 편집 + 내보내기(pdf/ 저장 · TSX 보기)를 묶는다.
+ * 블록 트리를 단일 상태로 들고 `builder.utils` 의 불변 헬퍼로 갱신하며,
+ * 미리보기는 `BuilderDocument`, 방출은 `emitBlocks` 로 파생한다.
+ */
 export function BuilderView(): React.ReactElement {
   const [blocks, setBlocks] = useState<Block[]>(initialDocument)
   const [selectedId, setSelectedId] = useState<string | null>(null)
